@@ -1,19 +1,27 @@
 import NavigationLayout from "../../components/navigationLayout";
+import Link from "next/link";
 const {SERVER} = require('../../config');
 
 export default function AllUserBoards ({boards}) {
   return (
     <NavigationLayout>
       <h1>All User Boards</h1>
-      <pre>{JSON.stringify(boards, null,2)}</pre>
+      <ul>
+        {boards.map(board => (
+          <li key={board.id}>
+            <Link href={`/boards/[boardId]`} as={`/boards/${board.id}`}>
+              <a>{board.title}</a>
+            </Link>
+          </li>
+        ))
+        }
+      </ul>
     </NavigationLayout>  )
 }
 
 export async function getServerSideProps() {
-  // Fetch data from external API
   const res = await fetch(`${SERVER}/boards`)
   const boards = await res.json()
 
-  // Pass data to the page via props
   return { props: {boards} }
 }
