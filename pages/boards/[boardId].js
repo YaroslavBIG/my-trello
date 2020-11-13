@@ -1,4 +1,5 @@
 import {useRouter} from 'next/router'
+import Tasks from '../../components/tasks/Tasks';
 const {SERVER} = require('../../config');
 
 export default function Boards ({board}) {
@@ -12,6 +13,7 @@ export default function Boards ({board}) {
             (columns.map(column => (
             <li key={column.id}>
               <h1>{column.title}</h1>
+              <Tasks columnId={column._id} boardId={board.id} />
             </li>
             ))
             )
@@ -22,8 +24,8 @@ export default function Boards ({board}) {
     </>
 }
 export async function getServerSideProps(ctx) {
-  const res = await fetch(`${SERVER}/boards/${ctx.query.boardId}`)
-  const board = await res.json()
+  const resBoard = await fetch(`${SERVER}/boards/${ctx.query.boardId}`)
+  const board = await resBoard.json()
 
   return { props: {board} }
 
